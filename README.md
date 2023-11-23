@@ -6,7 +6,11 @@ Web Application Dictionary Create By Flask Python Freamwork
 
 อธิบายแนวคิดในการสร้างโปรแกรม
 
-Flask Python Freamwork จะใช้หลักการของ (MTV) โดยโปรเจตนี้จะใช้แค่ Templete และ Views
+Flask Python Freamwork จะใช้หลักการของ (MTV) โดยโปรเจตนี้จะใช้แค่ Templete และ Views 
+
+ซึ่งเป็น web Application 
+
+และพัฒนาให้มี Function Next และ Previous
 
 - Model ==> คือ เป็นส่วนที่รับผิดชอบในการจัดเก็บและจัดการข้อมูล รวมถึงการประมวลผลของแอปพลิเคชัน , Model จะเป็นโค้ดที่เชื่อมโยงกับฐานข้อมูลและจัดการกับข้อมูล.
 
@@ -184,7 +188,7 @@ Code index.html เมื่อกดปุ่มเพิ่มคำศัพ�
       </div>
       <button class="btn btn-success" data-toggle="modal" data-target="#addWordModal">เพิ่มคำศัพท์</button>
 
-      
+ ##     
 
    - Read (อ่าน): การอ่านหรือดึงข้อมูลจากระบบ เช่น การดึงข้อมูลจากฐานข้อมูลเพื่อแสดงผลบนหน้าเว็บหรือแอปพลิเคชัน.
 
@@ -237,24 +241,263 @@ Code index.html เมื่อใส่ ข้อมูลในช่อง in
            <input type="submit" value="ล้างข้อมูล" class="btn btn-warning">
        </form>
 
-
-
-
-
-
-
-
-
+##
 
    - Update (อัปเดต): การปรับปรุงหรือแก้ไขข้อมูลที่มีอยู่ในระบบ เช่น การแก้ไขข้อมูลในฐานข้อมูล.
+
+
+![1700740829323](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/037aaa67-67d1-4fc0-bd43-48d3c938d7f1)
+
+
+![1700740876517](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/d8a70ba8-e27c-4118-82b5-87da9491e8b4)
+
+
+![1700740894996](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/6ebc9fae-d567-4d55-a93d-9e68db78c64e)
+
+
+![1700740909876](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/381346d9-ba88-4fc2-8803-e486ddfb0fb2)
+
+
+
+Code app.py เพื่อรับค่าและไปแก้ไขข้อมูลใน Arrays ==> Dictionary โดยใช้ key เพื่อหา จากนั้นส่งค่ากลับไปยัง index.html
+
+      @app.route('/edit_word_inlist', methods=['GET', 'POST'])
+       def edit_word_inlist():
+          KB_KEY_number = request.args.get('number')
+          KB_KEY_Vocub = request.args.get('englishWord')
+          KB_Thai_word = request.args.get('thaiWord')
+          KB_Type = request.args.get('wordType')
+          key = KB_KEY_Vocub.lower()
+          value_list = [KB_KEY_number, KB_KEY_Vocub, KB_Thai_word, KB_Type]
+          dictionary[key] = value_list
+          return redirect(url_for('index'))
+
+
+Code index.html เมื่อใส่ ข้อมูลในช่อง input edit แล้วกดปุ่ม จะขึ้น คำศัพท์ คำแปล ชนิดของข้อมูล ที่แก้ไข เพื่อส่งไปยัง app.py เพื่อเรียกใช้ฟังก์ชั่น edit_word
+
+   
+      <!-- เพิ่ม Modal ที่มี id="editWordModal" -->
+      <div class="modal fade" id="editWordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">แก้ไขคำศัพท์</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <!-- เพิ่มเนื้อหา Modal ที่นี่ -->
+                      <!-- ตัวอย่าง: -->
+                      <form action="{{url_for('edit_word')}}" method="GET">
+                          <div class="form-group">
+                              <label for="number">ลำดับ:</label>
+                              <input type="text" name="number" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="englishWord">คำศัพท์ภาษาอังกฤษ:</label>
+                              <input type="text" name="englishWord" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="thaiWord">คำศัพท์ภาษาไทย:</label>
+                              <input type="text" name="thaiWord" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="wordType">ประเภท:</label>
+                              <input type="text" name="wordType" class="form-control">
+                          </div>
+                          <button type="submit" class="btn btn-info">บันทึก</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <button class="btn btn-info" data-toggle="modal" data-target="#editWordModal">แก้ไขคำศัพท์</button>
+
+
+
+
+
+
+
+
+
+##
      
    - Delete (ลบ): การลบข้อมูลที่มีอยู่จากระบบ เช่น การลบบันทึกที่ไม่ต้องการออกจากฐานข้อมูล.
 
 
+![1700740744763](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/6ca11925-a531-4ae7-8f0d-780ec8b78f91)
+
+   
+![1700740774260](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/b2d78f10-1081-4264-a087-c410374d0f0c)
 
 
 
-         
+![1700740799579](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/1fc00d84-d2d9-44db-9c28-aa46b5f04939)
+
+
+
+![1700740816516](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/db7fee1a-41ec-49cd-a209-fa6271f829db)
+
+
+
+
+Code app.py เพื่อรับค่าและไปลบข้อมูลใน Arrays ==> Dictionary โดยใช้ key เพื่อหา จากนั้นส่งค่ากลับไปยัง index.html
+
+    @app.route('/delete_word_inlist', methods=['GET', 'POST'])
+    def delete_word_inlist():
+       KB_KEY_Vocub = request.form.get('englishWord', '')
+
+       # ตรวจสอบว่าคำศัพท์อยู่ใน Dictionary หรือไม่
+       if KB_KEY_Vocub.lower() in dictionary:
+           del dictionary[KB_KEY_Vocub.lower()]
+           print("Deleted:", KB_KEY_Vocub)
+           return redirect(url_for('index'))
+       else:
+           print("Key not found in Dictionary")
+        r   eturn render_template('error.html', message='คำศัพท์ไม่พบใน Dictionary')
+
+
+
+
+
+Code index.html เมื่อใส่ ข้อมูลในช่อง input Delete หรือกดปุ่มลบจามRow ของคำศัพท์ แล้วกดปุ่ม ข้อมูลจะถูก ส่งไปยัง app.py เพื่อเรียกใช้ delete_word
+
+
+     <!-- เพิ่ม Modal ที่มี id="DeleteWordModal" -->
+      <div class="modal fade" id="DeleteWordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">ลบคำศัพท์</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <!-- เพิ่มเนื้อหา Modal ที่นี่ -->
+                      <!-- ตัวอย่าง: -->
+                      <form action="{{url_for('delete_word')}}" method="GET">
+                          <div class="form-group">
+                              <label for="englishWord">คำศัพท์ภาษาอังกฤษที่ต้องการลบ:</label>
+                              <input type="text" name="englishWord" class="form-control">
+                          </div>
+                          <button type="submit" class="btn btn-success">ลบคำศัพท์</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <button class="btn btn-danger" data-toggle="modal" data-target="#DeleteWordModal">ลบคำศัพท์</button> 
+
+
+#
+
+5. จากโจทย์ คะแนนเสริม (10 คะแนน)
+
+หากนักศึกษาเลือกใช้โครงสร้างข้อมูลที่รองรับการค้นหาที่ไม่เป็นแบบ Linear แต่ยังรองรับ Next และ Previous เพื่อดูข้อมูลตัวถัดไปหรือก่อนหน้าได้ด้วย
+
+
+![1700741062770](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/afb85424-c048-4f1a-86ea-3b937824f475)
+
+
+![1700741081986](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/4c735447-6d55-4a6d-88b9-8b03e91bedce)
+
+
+
+![1700741108163](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/300ce9a5-a1c6-4951-be67-eb23413f49a7)
+
+
+![1700741125636](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/06da2527-d88b-43c4-ac0e-83485b491102)
+
+
+![1700741139500](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/a71a921e-1e1b-4803-8671-4439a02cc506)
+
+
+![1700741166434](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/54b9ba43-7bdd-47d1-8746-0a54cd60d2d9)
+
+![1700741181603](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/ff9d897e-4e33-4d0c-a23c-15902d80e260)
+
+
+![1700741197531](https://github.com/DionTawatchai/Web_Dictionary_By_python/assets/150526207/d4658f82-fc56-4ab3-881f-d422661b6d36)
+
+
+
+
+Code app.py เพื่อรับค่าและไปดึงข้อมูลใน Arrays ==> Dictionary โดยใช้ key เพื่อหา จากนั้นส่งค่ากลับไปยัง pn.html โดยใช้ ฟังก์ชั่น
+
+         @app.route('/next_or_previous_word', methods=['GET', 'POST'])
+         def next_or_previous_word():
+             search_term = request.args.get("search")
+             action = request.args.get("action")
+
+             if search_term:
+                 keys = list(dictionary.keys())
+                 current_index = keys.index(search_term.lower())
+
+                 if action == "next" and current_index < len(keys) - 1:
+                     next_index = current_index + 1
+                     next_word = keys[next_index]
+                     session['current_index'] = next_index
+                  return render_template('pn.html', Dic=dictionary, next_or_previous_word=next_word)
+
+                 elif action == "previous" and current_index > 0:
+                     previous_index = current_index - 1
+                     previous_word = keys[previous_index]
+                     session['current_index'] = previous_index
+                  return render_template('pn.html', Dic=dictionary, next_or_previous_word=previous_word)
+             return render_template('pn.html', Dic=dictionary, next_or_previous_word=search_term)
+             
+
+Code pn.html เมื่อใส่ ข้อมูลในช่อง input Search แล้วกดปุ่ม next หรือ previous จะขึ้น คำศัพท์ คำแปล ชนิดของข้อมูล ตามการกดปุ่มหน้าหรือหลังคำที่ใส่ลงไป
+
+      {% extends "layout.html" %}
+      {% block content %}
+      <div class="container mt-5">
+          {% if next_or_previous_word %}
+              <h2>English Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][1] }}</span></h2>
+              <h2>Thai Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][2] }}</span></h2>
+              <h2>Type Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][3] }}</span></h2>
+          {% else %}
+              <h2>Word: <span id="wordDisplay"></span></h2>
+          {% endif %}
+    
+          <form action="{{ url_for('next_or_previous_word') }}" method="GET">
+              <div class="form-group">
+                  <input type="text" name="search" class="form-control" placeholder="Enter a word..." value="{{ next_or_previous_word }}">
+                  <button type="submit" name="action" value="previous" class="btn btn-primary mt-2">Previous Word</button>
+                  <button type="submit" name="action" value="next" class="btn btn-success mt-2">Next Word</button>
+              </div>
+          </form>
+
+          <form action="{{ url_for('clear_data_pn') }}" method="POST">
+              <input type="hidden" name="search" value="{{ next_or_previous_word }}">
+              <input type="submit" value="Clear Data" class="btn btn-warning">
+          </form>
+
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Number</th>
+                      <th>English Word</th>
+                      <th>Thai Word</th>
+                      <th>Type</th>
+                  </tr>
+              </thead>
+           <tbody id="tableBody">
+                  {% for key, value_list in Dic.items() %}
+                      <tr>
+                          <td>{{ value_list[0] }}</td>
+                          <td>{{ value_list[1] }}</td>
+                          <td>{{ value_list[2] }}</td>
+                          <td>{{ value_list[3] }}</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+      {% endblock %}
 
 
 
@@ -262,13 +505,10 @@ Code index.html เมื่อใส่ ข้อมูลในช่อง in
 
 
 
-5. 
-    1.6
 
 
 
-
-6. 
+# หากผิดพลาดประการใดขออภัยไว้ ณ ที่นี้ด้วย 2310717302005 ธวัชชัย ธีรปกรณ์ Project Web_Dictionary_By_python
 
 
 
