@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    {% if next_or_previous_word %}
+        <h2>English Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][1] }}</span></h2>
+        <h2>Thai Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][2] }}</span></h2>
+        <h2>Type Word: <span id="wordDisplay">{{ Dic[next_or_previous_word][3] }}</span></h2>
+    {% else %}
+        <h2>Word: <span id="wordDisplay"></span></h2>
+    {% endif %}
+    
+    <form action="{{ url_for('next_or_previous_word') }}" method="GET">
+        <div class="form-group">
+            <input type="text" name="search" class="form-control" placeholder="Enter a word..." value="{{ next_or_previous_word }}">
+            <button type="submit" name="action" value="previous" class="btn btn-primary mt-2">Previous Word</button>
+            <button type="submit" name="action" value="next" class="btn btn-success mt-2">Next Word</button>
+        </div>
+    </form>
+
+    <form action="{{ url_for('clear_data_pn') }}" method="POST">
+        <input type="hidden" name="search" value="{{ next_or_previous_word }}">
+        <input type="submit" value="Clear Data" class="btn btn-warning">
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>English Word</th>
+                <th>Thai Word</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            {% for key, value_list in Dic.items() %}
+                <tr>
+                    <td>{{ value_list[0] }}</td>
+                    <td>{{ value_list[1] }}</td>
+                    <td>{{ value_list[2] }}</td>
+                    <td>{{ value_list[3] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Dictionary</h1>
+    <form action="{{url_for('index')}}" method="GET">
+        <div class="form-group">
+            <label for="search">Search:</label>
+            <input type="text" name="searchN" class="form-control" placeholder="Enter a word..."><br>
+            <input type="submit" value="ค้นหาคำศัพท์" class="btn btn-primary">
+            
+        </div>
+        
+    </form>
+    <form action="{{url_for('clear_data')}}" method="POST">
+        <input type="hidden" name="searchN" value="{{ next_or_previous_word }}">
+        <input type="submit" value="ล้างข้อมูล" class="btn btn-warning">
+    </form>
+    <br>
+    {% if name == '' %}
+    
+    {% else %}
+        
+        <div class="card">
+            <div class="card-body">
+                ลำดับที่ : {{Dic[data][0]}}<br>
+                English word : {{Dic[data][1]}}<br>
+                Thai word: {{Dic[data][2]}}<br>
+                Type : {{Dic[data][3]}}
+            </div>
+        </div>
+        <br>
+        
+        
+    {% endif %}
+    <table class="table">
+      <thead>
+        <tr>
+            <th>Number</th>
+            <th>English Word</th>
+            <th>Thai Word</th>
+            <th>Type</th>
+            <th>EDIT and DELETE</th>
+        </tr>
+        {% for key, value_list in Dic.items() %}
+        <tr>
+            <th>{{ value_list[0] }}</th>
+            <th>{{ value_list[1] }}</th>
+            <th>{{ value_list[2] }}</th>
+            <th>{{ value_list[3] }}</th>
+            <th>
+                <div class="btn-group">
+                    <button class="btn btn-warning mr-3" data-toggle="modal" data-target="#editWordModal" name="{{ value_list[1] }}">แก้ไขคำศัพท์</button>
+                    <form action="{{ url_for('delete_word_inlist') }}" method="post">
+                        <input type="hidden" name="englishWord" value="{{ value_list[1] }}">
+                        <button type="submit" class="btn btn-danger">ลบคำศัพท์</button>
+                    </form>
+                </div>
+            </th>
+        </tr>
+        {% endfor %}
+
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+<!-- เพิ่ม Modal ที่มี id="addWordModal" -->
+<div class="modal fade" id="addWordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">เพิ่มคำศัพท์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- เพิ่มเนื้อหา Modal ที่นี่ -->
+                <!-- ตัวอย่าง: -->
+                <form action="{{url_for('add_word')}}" method="GET">
+                    <div class="form-group">
+                        <label for="number">ลำดับ:</label>
+                        <input type="text" name="number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="englishWord">คำศัพท์ภาษาอังกฤษ:</label>
+                        <input type="text" name="englishWord" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="thaiWord">คำศัพท์ภาษาไทย:</label>
+                        <input type="text" name="thaiWord" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="wordType">ประเภท:</label>
+                        <input type="text" name="wordType" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">บันทึก</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-success" data-toggle="modal" data-target="#addWordModal">เพิ่มคำศัพท์</button>
+
+<!-- เพิ่ม Modal ที่มี id="DeleteWordModal" -->
+<div class="modal fade" id="DeleteWordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ลบคำศัพท์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- เพิ่มเนื้อหา Modal ที่นี่ -->
+                <!-- ตัวอย่าง: -->
+                <form action="{{url_for('delete_word')}}" method="GET">
+                    <div class="form-group">
+                        <label for="englishWord">คำศัพท์ภาษาอังกฤษที่ต้องการลบ:</label>
+                        <input type="text" name="englishWord" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">ลบคำศัพท์</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-danger" data-toggle="modal" data-target="#DeleteWordModal">ลบคำศัพท์</button> 
+
+<!-- เพิ่ม Modal ที่มี id="editWordModal" -->
+<div class="modal fade" id="editWordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">แก้ไขคำศัพท์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- เพิ่มเนื้อหา Modal ที่นี่ -->
+                <!-- ตัวอย่าง: -->
+                <form action="{{url_for('edit_word')}}" method="GET">
+                    <div class="form-group">
+                        <label for="number">ลำดับ:</label>
+                        <input type="text" name="number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="englishWord">คำศัพท์ภาษาอังกฤษ:</label>
+                        <input type="text" name="englishWord" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="thaiWord">คำศัพท์ภาษาไทย:</label>
+                        <input type="text" name="thaiWord" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="wordType">ประเภท:</label>
+                        <input type="text" name="wordType" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-info">บันทึก</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-info" data-toggle="modal" data-target="#editWordModal">แก้ไขคำศัพท์</button>    
+<br>
+<br>
+
+{% endblock %}
