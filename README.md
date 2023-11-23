@@ -425,7 +425,7 @@ Code index.html เมื่อใส่ ข้อมูลในช่อง in
 
 
 
-Code app.py เพื่อรับค่าและไปดึงข้อมูลใน Arrays ==> Dictionary โดยใช้ key เพื่อหา จากนั้นส่งค่ากลับไปยัง pn.html โดยใช้ ฟังก์ชั่น
+Code app.py เพื่อรับค่าและไปดึงข้อมูลใน Arrays ==> Dictionary โดยใช้ key เพื่อหา จากนั้นส่งค่ากลับไปยัง pn.html โดยใช้ ฟังก์ชั่น next_or_previous_word
 
          @app.route('/next_or_previous_word', methods=['GET', 'POST'])
          def next_or_previous_word():
